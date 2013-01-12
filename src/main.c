@@ -3,7 +3,7 @@
 *
 * Written and maintained by Stephen Ramsay <sramsay.unl@gmail.com>
 *
-* Last Modified: Fri Jan 11 21:25:52 CST 2013
+* Last Modified: Fri Jan 11 22:23:57 CST 2013
 
 * Copyright (c) 2013 Stephen Ramsay
 *
@@ -69,7 +69,7 @@ xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar * xpath)
 
 int main(int argc, char **argv)
 {
-	if (argc <= 1) {
+	if (argc <= 1 && stdin == NULL) {
 		printf("Usage: %s [file.xml]\n", argv[0]);
 		return (0);
 	}
@@ -104,16 +104,23 @@ int main(int argc, char **argv)
 	}
 
 	//xmlChar *xpath = (xmlChar*) "//w[starts-with(@pos, 'n') and @eos='1']";
-	xmlChar *xpath = (xmlChar *) xpath_string;
 	
-	char *file_argument = *(argv + optind);
+	xmlChar *xpath;
 	xmlDocPtr doc = NULL;
+	char *file_argument = *(argv + optind);
+
+	if (optind == 1) {
+		xpath = (xmlChar *) "//w";
+	} else {
+		xpath = (xmlChar *) xpath_string;
+	}
 
 	if (!file_argument) {
 		doc = get_doc("-");
 	} else {
 	       	doc = get_doc(file_argument);
 	}
+
 
 	xmlXPathObjectPtr result = get_nodeset(doc, xpath);
 

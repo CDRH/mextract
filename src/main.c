@@ -30,8 +30,7 @@
 
 xmlDocPtr get_doc(char *docname)
 {
-	xmlDocPtr doc;
-	doc = xmlParseFile(docname);
+	xmlDocPtr doc = xmlParseFile(docname);
 
 	if (doc == NULL) {
 		fprintf(stderr, "Unable to parse document. \n");
@@ -80,29 +79,42 @@ int main(int argc, char **argv)
 		{0, 0, 0, 0}
 	};
 
-	int opt;
+	int opt = 0;
 	int option_index = 0;
-	char *xpath_string;
+	char *xpath_string = NULL;
+	int bytes_out = 0;
 
 	while ((opt = getopt_long(argc, argv, "p:", long_options,
 				       	&option_index)) != -1) {
 		if (opt == -1)
-	       	break;
+	       		break;
 
 		switch (opt) {
-		case 'p':
-			asprintf(&xpath_string, "//w[@pos='%s']", optarg);
-			break;
-		default:
-			exit(EXIT_FAILURE);
+			case 'p':
+				bytes_out = asprintf(&xpath_string,
+					       	"//w[@pos='%s']", optarg);
+				if (bytes_out == -1) {
+					printf("Fatal: Unable to assign xpath");
+					exit(EXIT_FAILURE);
+				}
+				break;
+			default:
+				exit(EXIT_FAILURE);
 		}
 	}
 
 	//xmlChar *xpath = (xmlChar*) "//w[starts-with(@pos, 'n') and @eos='1']";
 	xmlChar *xpath = (xmlChar *) xpath_string;
 	
-	char *docname = argv[argc-1];
-	xmlDocPtr doc = get_doc(docname);
+	char *file_argument = *(argv + optind);
+	xmlDocPtr doc = NULL;
+
+	if (!file_argument) {
+		doc = get_doc("-");
+	} else {
+	       	doc = get_doc(file_argument);
+	}
+
 	xmlXPathObjectPtr result = get_nodeset(doc, xpath);
 
 	xmlChar *token;

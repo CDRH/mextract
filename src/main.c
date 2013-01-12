@@ -3,7 +3,7 @@
 *
 * Written and maintained by Stephen Ramsay <sramsay.unl@gmail.com>
 *
-* Last Modified: Tue Jan 08 11:48:47 CST 2013
+* Last Modified: Fri Jan 11 21:25:52 CST 2013
 
 * Copyright (c) 2013 Stephen Ramsay
 *
@@ -90,16 +90,16 @@ int main(int argc, char **argv)
 	       		break;
 
 		switch (opt) {
-			case 'p':
-				bytes_out = asprintf(&xpath_string,
-					       	"//w[@pos='%s']", optarg);
-				if (bytes_out == -1) {
-					printf("Fatal: Unable to assign xpath");
-					exit(EXIT_FAILURE);
-				}
-				break;
-			default:
+		case 'p':
+			bytes_out = asprintf(&xpath_string,
+				       	"//w[@pos='%s']", optarg);
+			if (bytes_out == -1) {
+			       	printf("Fatal: Unable to assign xpath");
 				exit(EXIT_FAILURE);
+			}
+			break;
+		default:
+			exit(EXIT_FAILURE);
 		}
 	}
 

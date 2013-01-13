@@ -25,9 +25,11 @@
 * <http://www.gnu.org/licenses/>.
 */
 
+
+
 #define _GNU_SOURCE
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define Sasprintf(write_to, ...) {				\
 	int bytes = 0;						\

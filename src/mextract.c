@@ -23,60 +23,24 @@
 */
 
 #include "mextract.h"
+#include "../config.h"
 #include <getopt.h>
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 #include <stdio.h>
 
-xmlDocPtr get_doc(char *docname)
-{
-	xmlDocPtr doc = xmlParseFile(docname);
-
-	if (doc == NULL) {
-		fprintf(stderr, "Unable to parse document. \n");
-		return NULL;
-	}
-
-	return doc;
-}
-
-xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar * xpath)
-{
-	xmlXPathContextPtr context = xmlXPathNewContext(doc);
-
-	if (context == NULL) {
-		printf("Error in xmlXPathNewContext\n");
-		return NULL;
-	}
-
-	xmlXPathObjectPtr result = xmlXPathEvalExpression(xpath, context);
-	xmlXPathFreeContext(context);
-
-	if (result == NULL) {
-		printf("Error in xmlXPathEvalExpression\n");
-		return NULL;
-	}
-
-	if (xmlXPathNodeSetIsEmpty(result->nodesetval)) {
-		xmlXPathFreeObject(result);
-		printf("No result\n");
-		return NULL;
-
-	}
-
-	return result;
-}
+void xpath_builder(char **xpath_string, char *format_string, char *optarg);
+xmlDocPtr get_doc(char *docname);
+xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar * xpath);
+void version(void);
 
 int main(int argc, char **argv)
 {
-	if (argc <= 1 && stdin == NULL) {
-		printf("Usage: %s [file.xml]\n", argv[0]);
-		return (0);
-	}
 	
 	static struct option long_options[] = {
 		{"lem",  required_argument, 0, 'l'},
 		{"pos",  required_argument, 0, 'p'},
+		{"version",  no_argument, NULL, 'V'},
 		{0, 0, 0, 0}
 	};
 
@@ -91,31 +55,18 @@ int main(int argc, char **argv)
 
 		switch (opt) {
 		case 'l':
-			if (xpath_string == NULL) {
-				Sasprintf(xpath_string, "//w[@lem='%s'",
-					       	optarg);
-			} else {
-				Sasprintf(xpath_string, "%s and @lem='%s'",
-						xpath_string, optarg);
-			}
+			xpath_builder(&xpath_string, "lem", optarg);
 			break;
 		case 'p':
-			if (xpath_string == NULL) {
-				Sasprintf(xpath_string, "//w[@pos='%s'",
-					       	optarg);
-			} else {
-				Sasprintf(xpath_string, "%s and @pos='%s'",
-						xpath_string, optarg);
-			}
+			xpath_builder(&xpath_string, "pos", optarg);
 			break;
+		case 'V':
+			version();
+			exit(EXIT_SUCCESS);
 		default:
 			exit(EXIT_FAILURE);
 		}
-			
-
 	}
-
-	//xmlChar *xpath = (xmlChar*) "//w[starts-with(@pos, 'n')
 	
 	xmlChar *xpath;
 	xmlDocPtr doc = NULL;
@@ -158,4 +109,72 @@ int main(int argc, char **argv)
 	debug_print("%s\n", xpath_string);
 	free(xpath_string);
 	return (1);
+}
+
+
+void xpath_builder(char **xpath_string, char *format_string, char *optarg)
+{
+	if (*xpath_string == NULL) {
+		Sasprintf(*xpath_string, "//w[@%s=", format_string);
+        	Sasprintf(*xpath_string, "%s'%s'", *xpath_string, optarg);
+        } else {
+		Sasprintf(*xpath_string, "%s and @%s=", *xpath_string,
+							format_string);
+        	Sasprintf(*xpath_string, "%s'%s'", *xpath_string, optarg);
+	}
+}
+
+
+xmlDocPtr get_doc(char *docname)
+{
+	xmlDocPtr doc = xmlParseFile(docname);
+
+	if (doc == NULL) {
+		fprintf(stderr, "Unable to parse document. \n");
+		return NULL;
+	}
+
+	return doc;
+}
+
+
+xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar * xpath)
+{
+	xmlXPathContextPtr context = xmlXPathNewContext(doc);
+
+	if (context == NULL) {
+		printf("Error in xmlXPathNewContext\n");
+		return NULL;
+	}
+
+	xmlXPathObjectPtr result = xmlXPathEvalExpression(xpath, context);
+	xmlXPathFreeContext(context);
+
+	if (result == NULL) {
+		printf("Error in xmlXPathEvalExpression\n");
+		return NULL;
+	}
+
+	if (xmlXPathNodeSetIsEmpty(result->nodesetval)) {
+		xmlXPathFreeObject(result);
+		printf("No result\n");
+		return NULL;
+
+	}
+
+	return result;
+}
+
+
+void version(void)
+{
+	printf("%s\n", PACKAGE_STRING);
+	fputs("Copyright © 2013 by Stephen Ramsay", stdout);
+	fputs("\
+\n\
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\n\
+This is free software: you are free to change and redistribute it.\n\
+There is NO WARRANTY, to the extent permitted by law.\n\
+\n\
+", stdout);
 }

@@ -6,7 +6,7 @@
 *
 * Written and maintained by Stephen Ramsay <sramsay.unl@gmail.com>
 *
-* Last Modified: Sat Jan 12 19:08:33 CST 2013
+* Last Modified: Sat Jan 12 19:17:14 CST 2013
 *
 * Copyright (c) 2013 Stephen Ramsay
 *
@@ -29,12 +29,12 @@
 
 #define DEBUG 0
 
-#define Sasprintf(write_to, ...) {                        \
+#define Sasprintf(write_to, ...) {			  \
 	int bytes = 0;					  \
-	char *tmp_string_for_extend = (write_to);         \
-	bytes = asprintf(&(write_to), __VA_ARGS__);       \
-	free(tmp_string_for_extend);                      \
-	if (bytes == -1) {			          \
+	char *tmp_string_for_extend = (write_to);	  \
+	bytes = asprintf(&(write_to), __VA_ARGS__);	  \
+	free(tmp_string_for_extend);			  \
+	if (bytes == -1) {				  \
 		printf("Fatal: Unable to assign string"); \
 		exit(EXIT_FAILURE);			  \
 	}						  \

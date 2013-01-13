@@ -1,5 +1,5 @@
 bin_PROGRAMS = mextract
-mextract_SOURCES = main.c
+mextract_SOURCES = mextract.c
 
 AM_CFLAGS = -Wall -Wextra
 

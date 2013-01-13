@@ -6,7 +6,7 @@ AC_INIT([mextract], [0.2.0], [sramsay.unl@gmail.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
-AC_CONFIG_SRCDIR([src/main.c])
+AC_CONFIG_SRCDIR([src/mextract.c])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.

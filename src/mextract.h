@@ -29,15 +29,15 @@
 
 #define DEBUG 0
 
-#define Sasprintf(write_to, ...) {			  \
-	int bytes = 0;					  \
-	char *tmp_string_for_extend = (write_to);	  \
-	bytes = asprintf(&(write_to), __VA_ARGS__);	  \
-	free(tmp_string_for_extend);			  \
-	if (bytes == -1) {				  \
-		printf("Fatal: Unable to assign string"); \
-		exit(EXIT_FAILURE);			  \
-	}						  \
+#define Sasprintf(write_to, ...) {				\
+	int bytes = 0;						\
+	char *tmp_string_for_extend = (write_to);		\
+	bytes = asprintf(&(write_to), __VA_ARGS__);		\
+	free(tmp_string_for_extend);				\
+	if (bytes == -1) {					\
+		printf("Fatal: Unable to assign string");	\
+		exit(EXIT_FAILURE);				\
+	}							\
 }
 
 #define debug_print(fmt, ...)					       \

@@ -3,7 +3,7 @@
 *
 * Written and maintained by Stephen Ramsay <sramsay.unl@gmail.com>
 *
-* Last Modified: Sat Jan 12 19:05:40 CST 2013
+* Last Modified: Mon Jan 14 14:59:52 CST 2013
 
 * Copyright (c) 2013 Stephen Ramsay
 *
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 {
 	
 	static struct option long_options[] = {
-		{"lem",  required_argument, 0, 'l'},
+		{"lemma",  required_argument, 0, 'l'},
 		{"pos",  required_argument, 0, 'p'},
 		{"version",  no_argument, NULL, 'V'},
 		{0, 0, 0, 0}
@@ -46,6 +46,7 @@ int main(int argc, char **argv)
 
 	int opt = 0;
 	int option_index = 0;
+	int switch_count = 0;
 	char *xpath_string = NULL;
 
 	while ((opt = getopt_long(argc, argv, "p:", long_options,
@@ -55,7 +56,8 @@ int main(int argc, char **argv)
 
 		switch (opt) {
 		case 'l':
-			xpath_builder(&xpath_string, "lem", optarg);
+			xpath_builder(&xpath_string, "lemma", optarg);
+			switch_count++;
 			break;
 		case 'p':
 			xpath_builder(&xpath_string, "pos", optarg);
@@ -66,12 +68,18 @@ int main(int argc, char **argv)
 		default:
 			exit(EXIT_FAILURE);
 		}
+
+		if (switch_count > 1)
+			fputs(
+	"One of --lemma, --spelling, --token, --regular permitted.",
+	stdout);
+			
+
 	}
 	
 	xmlChar *xpath;
 	xmlDocPtr doc = NULL;
 	char *file_argument = *(argv + optind);
-
 
 	if (optind == 1) {
 		xpath = (xmlChar *) "//w";
@@ -86,10 +94,9 @@ int main(int argc, char **argv)
 	       	doc = get_doc(file_argument);
 	}
 
-
 	xmlXPathObjectPtr result = get_nodeset(doc, xpath);
 
-	xmlChar *token;
+	xmlChar *token = NULL;
 
 	if (result) {
 		xmlNodeSetPtr nodeset = result->nodesetval;
@@ -111,7 +118,13 @@ int main(int argc, char **argv)
 	return (1);
 }
 
-
+/*
+ * Most of the command line switches provide information
+ * necessary for constructing the appropriate XPath expression.
+ * This function does the conversion.
+ *
+ * Note that libxml does *not* understand XPath 2.0.
+ */
 void xpath_builder(char **xpath_string, char *format_string, char *optarg)
 {
 	if (*xpath_string == NULL) {
@@ -165,7 +178,9 @@ xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar * xpath)
 	return result;
 }
 
-
+/* 
+ * Version info for the --version switch
+ */
 void version(void)
 {
 	printf("%s\n", PACKAGE_STRING);

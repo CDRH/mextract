@@ -25,12 +25,10 @@
 * <http://www.gnu.org/licenses/>.
 */
 
-
-
-#define _GNU_SOURCE
-
 #define DEBUG 1
 
+/* Safe version of asprintf.  Slightly modified from Ben Klemens
+ * version */
 #define Sasprintf(write_to, ...) {				\
 	int bytes = 0;						\
 	char *tmp_string_for_extend = (write_to);		\
@@ -42,5 +40,6 @@
 	}							\
 }
 
+/* Enable debugging string */
 #define debug_print(fmt, ...)					       \
 	do { if (DEBUG) fprintf(stderr, fmt, __VA_ARGS__); } while (0)

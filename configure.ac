@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([mextract], [0.5.0], [sramsay.unl@gmail.com])
+AC_INIT([mextract], [0.6.0], [sramsay.unl@gmail.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
@@ -22,6 +22,7 @@ PKG_CHECK_MODULES(XML, libxml-2.0 >= 2.4)
 # Checks for typedefs, structures, and compiler characteristics.
 
 # Checks for library functions.
+AC_GNU_SOURCE
 AC_CHECK_FUNCS([asprintf])
 
 AC_OUTPUT

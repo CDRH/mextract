@@ -1,5 +1,6 @@
 bin_PROGRAMS = mextract
 mextract_SOURCES = mextract.c
+include_HEADERS = mextract.h
 
 AM_CFLAGS = -Wall -Wextra
 

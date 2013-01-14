@@ -36,11 +36,10 @@ void version(void);
 
 int main(int argc, char **argv)
 {
-	
 	static struct option long_options[] = {
-		{"lemma",  required_argument, 0, 'l'},
-		{"pos",  required_argument, 0, 'p'},
-		{"version",  no_argument, NULL, 'V'},
+		{"lem",     no_argument,       NULL, 'l'},
+		{"pos",     required_argument, 0,    'p'},
+		{"version", no_argument,       NULL, 'V'},
 		{0, 0, 0, 0}
 	};
 
@@ -56,11 +55,11 @@ int main(int argc, char **argv)
 
 		switch (opt) {
 		case 'l':
-			xpath_builder(&xpath_string, "lemma", optarg);
-			switch_count++;
+			//xpath_builder(&xpath_string, "lem", optarg);
+			//switch_count++;
 			break;
 		case 'p':
-			xpath_builder(&xpath_string, "pos", optarg);
+			Sasprintf(xpath_string, "//w[@pos='%s']", optarg);
 			break;
 		case 'V':
 			version();
@@ -71,7 +70,7 @@ int main(int argc, char **argv)
 
 		if (switch_count > 1)
 			fputs(
-	"One of --lemma, --spelling, --token, --regular permitted.",
+	"One of --lem, --spe, --tok, --reg permitted.",
 	stdout);
 			
 
@@ -84,7 +83,6 @@ int main(int argc, char **argv)
 	if (optind == 1) {
 		xpath = (xmlChar *) "//w";
 	} else {
-		Sasprintf(xpath_string, "%s]", xpath_string);
 		xpath = (xmlChar *) xpath_string;
 	}
 
@@ -96,17 +94,18 @@ int main(int argc, char **argv)
 
 	xmlXPathObjectPtr result = get_nodeset(doc, xpath);
 
-	xmlChar *token = NULL;
+	xmlChar *word = NULL;
+	xmlChar *attrib = NULL;
 
 	if (result) {
 		xmlNodeSetPtr nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
-			token =
-			    xmlNodeListGetString(doc,
-						 nodeset->nodeTab[i]->
-						 xmlChildrenNode, 1);
-			printf("%s\n", token);
-			xmlFree(token);
+			 //word = xmlNodeListGetString(doc, 
+			 //	nodeset->nodeTab[i]->xmlChildrenNode); 
+			attrib = xmlGetProp(nodeset->nodeTab[i], "tok");
+			printf("%s\n", attrib);
+			//xmlFree(word);
+			xmlFree(attrib);
 		}
 		xmlXPathFreeObject(result);
 	}
@@ -125,17 +124,42 @@ int main(int argc, char **argv)
  *
  * Note that libxml does *not* understand XPath 2.0.
  */
-void xpath_builder(char **xpath_string, char *format_string, char *optarg)
-{
-	if (*xpath_string == NULL) {
-		Sasprintf(*xpath_string, "//w[@%s=", format_string);
-        	Sasprintf(*xpath_string, "%s'%s'", *xpath_string, optarg);
-        } else {
-		Sasprintf(*xpath_string, "%s and @%s=", *xpath_string,
-							format_string);
-        	Sasprintf(*xpath_string, "%s'%s'", *xpath_string, optarg);
-	}
-}
+//void xpath_builder(char **xpath_string, char *cl_switch, char *optarg)
+//{
+//	if (*xpath_string == NULL) {
+//	       	Sasprintf(*xpath_string, "//w");
+//	} else {
+//		Sasprintf(*xpath_string, "%s and", *xpath_string);
+//       	}
+//
+//	if (! STREQ("lem", cl_switch)) {
+//
+//		Sasprintf(*xpath_string, "@%s
+//	}
+//
+//
+//
+//
+//	
+//	// string(//div[@class='known']/@name)
+//	if (*xpath_string == NULL) {
+//		if (optarg == NULL) {
+//        		Sasprintf(*xpath_string, "%s='%s'", *xpath_string,
+//					"text()");
+//		} else {
+//        		Sasprintf(*xpath_string, "%s='%s'", *xpath_string,
+//				       	optarg);
+//		}
+//        } else {
+//		if (optarg == NULL) {
+//        		Sasprintf(*xpath_string, "%s'%s'", *xpath_string,
+//					"text()");
+//		} else {
+//        		Sasprintf(*xpath_string, "%s'%s'", *xpath_string,
+//					optarg);
+//		}
+//	}
+//}
 
 
 xmlDocPtr get_doc(char *docname)

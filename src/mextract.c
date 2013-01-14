@@ -23,7 +23,7 @@
 */
 
 #include "mextract.h"
-#include "../config.h"
+#include <config.h>
 #include <getopt.h>
 #include <libxml/parser.h>
 #include <libxml/xpath.h>

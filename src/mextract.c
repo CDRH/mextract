@@ -3,8 +3,8 @@
 *
 * Written and maintained by Stephen Ramsay <sramsay.unl@gmail.com>
 *
-* Last Modified: Tue Jan 15 16:24:24 CST 2013
-
+* Last Modified: Tue Jan 15 17:06:24 CST 2013
+*
 * Copyright (c) 2013 Stephen Ramsay
 *
 * MorphExtractor is free software; you can redistribute it and/or modify
@@ -34,14 +34,18 @@ void xpath_builder(char **xpath_string, char *format_string, char *optarg, int
 xmlDocPtr get_doc(char *docname);
 xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar * xpath);
 void version(void);
+void help(void);
 
 int main(int argc, char **argv)
 {
 	static struct option long_options[] = {
-		{"eos",     no_argument,       NULL, 'e'},
-		{"lemma",   no_argument,       NULL, 'l'},
-		{"pos",     required_argument, 0,    'p'},
-		{"version", no_argument,       NULL, 'V'},
+		{"eos",      no_argument,       NULL, 'e'},
+		{"help",     no_argument,       NULL, 'h'},
+		{"lemma",    no_argument,       NULL, 'l'},
+		{"pos",      required_argument, 0,    'p'},
+		{"regular",  no_argument,       NULL, 'r'},
+		{"spelling", no_argument,       NULL, 's'},
+		{"version",  no_argument,       NULL, 'V'},
 		{0, 0, 0, 0}
 	};
 
@@ -53,7 +57,7 @@ int main(int argc, char **argv)
 	Sasprintf(xpath_string, "//w");
 	xmlChar *content_switch = NULL;
 
-	while ((opt = getopt_long(argc, argv, "lp:", long_options,
+	while ((opt = getopt_long(argc, argv, "ehlp:rsV", long_options,
 				       	&option_index)) != -1) {
 		if (opt == -1)
 	       		break;
@@ -62,6 +66,9 @@ int main(int argc, char **argv)
 			xpath_builder(&xpath_string, "eos", "1", attr_count);
 			attr_count++;
 			break;
+		case 'h':
+			help();
+			exit(EXIT_SUCCESS);
 		case 'l':
 			content_switch = (xmlChar *) "lem";
 			switch_count++;
@@ -71,6 +78,14 @@ int main(int argc, char **argv)
 					attr_count);
 			attr_count++;
 			break;
+		case 'r':
+			content_switch = (xmlChar *) "reg";
+			switch_count++;
+			break;
+		case 's':
+			content_switch = (xmlChar *) "spe";
+			switch_count++;
+			break;
 		case 'V':
 			version();
 			exit(EXIT_SUCCESS);
@@ -78,10 +93,11 @@ int main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 
-		if (switch_count > 1)
+		if (switch_count > 1) {
 			fputs(
-	"One of --lem, --spe, --tok, --reg permitted.",
-	stdout);
+	"One of --lemma, --spelling, --regular permitted.\n", stdout);
+			exit(EXIT_FAILURE);
+		}
 
 	}
 	
@@ -202,4 +218,23 @@ This is free software: you are free to change and redistribute it.\n\
 There is NO WARRANTY, to the extent permitted by law.\n\
 \n\
 ", stdout);
+}
+
+void help(void)
+{
+	printf("Usage: %s [OPTIONS]... [FILE]\n", PACKAGE);
+	fputs("\n\
+Content Options (one of):\n\
+   -l, --lemma		The lemma head word form(s) of the token.\n\
+   -r, --regular	A standardized version of the spelling.\n\
+   -s, --spelling	The spelling (without specialized meta-characters.\n\n\
+XPath specifiers:\n\
+   -p, --pos		Part of speech (NUPOS).\n\
+   -e, --eos		At end of sentence.\n\n\
+", stdout);
+
+   	printf("By default, %s will return all tokens (i.e. //w/@tok)\n\n",
+			PACKAGE);
+
+	printf("Report bugs to: %s\n", PACKAGE_BUGREPORT);
 }

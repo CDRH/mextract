@@ -3,7 +3,7 @@
 *
 * Written and maintained by Stephen Ramsay <sramsay.unl@gmail.com>
 *
-* Last Modified: Tue Jan 15 15:35:04 CST 2013
+* Last Modified: Tue Jan 15 16:24:24 CST 2013
 
 * Copyright (c) 2013 Stephen Ramsay
 *
@@ -29,7 +29,8 @@
 #include <libxml/xpath.h>
 #include <stdio.h>
 
-void xpath_builder(char **xpath_string, char *format_string, char *optarg);
+void xpath_builder(char **xpath_string, char *format_string, char *optarg, int
+		attr_count);
 xmlDocPtr get_doc(char *docname);
 xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar * xpath);
 void version(void);
@@ -37,7 +38,8 @@ void version(void);
 int main(int argc, char **argv)
 {
 	static struct option long_options[] = {
-		{"lem",     no_argument,       NULL, 'l'},
+		{"eos",     no_argument,       NULL, 'e'},
+		{"lemma",   no_argument,       NULL, 'l'},
 		{"pos",     required_argument, 0,    'p'},
 		{"version", no_argument,       NULL, 'V'},
 		{0, 0, 0, 0}
@@ -46,6 +48,7 @@ int main(int argc, char **argv)
 	int opt = 0;
 	int option_index = 0;
 	int switch_count = 0;
+	int attr_count   = 0;
 	char *xpath_string = NULL;
 	Sasprintf(xpath_string, "//w");
 	xmlChar *content_switch = NULL;
@@ -54,15 +57,19 @@ int main(int argc, char **argv)
 				       	&option_index)) != -1) {
 		if (opt == -1)
 	       		break;
-
 		switch (opt) {
+		case 'e':
+			xpath_builder(&xpath_string, "eos", "1", attr_count);
+			attr_count++;
+			break;
 		case 'l':
 			content_switch = (xmlChar *) "lem";
 			switch_count++;
 			break;
 		case 'p':
-			Sasprintf(xpath_string, "%s[@pos='%s']",
-				       	xpath_string, optarg);
+			xpath_builder(&xpath_string, "pos", optarg,
+					attr_count);
+			attr_count++;
 			break;
 		case 'V':
 			version();
@@ -78,10 +85,17 @@ int main(int argc, char **argv)
 
 	}
 	
+	xmlChar *xpath = NULL;
+
+	if (attr_count > 0) {
+		Sasprintf(xpath_string, "%s%s", xpath_string, "]");
+		xpath = (xmlChar *) xpath_string;
+	} else {
+		xpath = (xmlChar *) xpath_string;
+	}
+
 	xmlDocPtr doc = NULL;
 	char *file_argument = *(argv + optind);
-
-	xmlChar *xpath = (xmlChar *) xpath_string;
 
 	if (!file_argument) {
 		doc = get_doc("-");
@@ -90,14 +104,11 @@ int main(int argc, char **argv)
 	}
 
 	xmlXPathObjectPtr result = get_nodeset(doc, xpath);
-
 	xmlChar *attrib = NULL;
 
 	if (result) {
 		xmlNodeSetPtr nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
-			 //word = xmlNodeListGetString(doc, 
-			 //	nodeset->nodeTab[i]->xmlChildrenNode); 
 			if (content_switch) {	
 				attrib = xmlGetProp(nodeset->nodeTab[i],
 					       	content_switch);
@@ -120,48 +131,21 @@ int main(int argc, char **argv)
 }
 
 /*
- * Most of the command line switches provide information
- * necessary for constructing the appropriate XPath expression.
- * This function does the conversion.
- *
- * Note that libxml does *not* understand XPath 2.0.
+ * Some switches (lemma, special, regular) are selected directly 
+ * from nodesets.  Others (eos, pos) are selected using an XPath expression.
+ * This function constructs the necessary XPath.
  */
-//void xpath_builder(char **xpath_string, char *cl_switch, char *optarg)
-//{
-//	if (*xpath_string == NULL) {
-//	       	Sasprintf(*xpath_string, "//w");
-//	} else {
-//		Sasprintf(*xpath_string, "%s and", *xpath_string);
-//       	}
-//
-//	if (! STREQ("lem", cl_switch)) {
-//
-//		Sasprintf(*xpath_string, "@%s
-//	}
-//
-//
-//
-//
-//	
-//	// string(//div[@class='known']/@name)
-//	if (*xpath_string == NULL) {
-//		if (optarg == NULL) {
-//        		Sasprintf(*xpath_string, "%s='%s'", *xpath_string,
-//					"text()");
-//		} else {
-//        		Sasprintf(*xpath_string, "%s='%s'", *xpath_string,
-//				       	optarg);
-//		}
-//        } else {
-//		if (optarg == NULL) {
-//        		Sasprintf(*xpath_string, "%s'%s'", *xpath_string,
-//					"text()");
-//		} else {
-//        		Sasprintf(*xpath_string, "%s'%s'", *xpath_string,
-//					optarg);
-//		}
-//	}
-//}
+void xpath_builder(char **xpath_string, char *cl_switch, char *optarg,
+	       	int attr_count)
+{
+	if (attr_count == 0) {
+		Sasprintf(*xpath_string, "%s[@%s='%s'", *xpath_string,
+				cl_switch, optarg);
+	} else {
+		Sasprintf(*xpath_string, "%s and @%s='%s'", *xpath_string,
+				cl_switch, optarg);
+	}
+}
 
 
 xmlDocPtr get_doc(char *docname)

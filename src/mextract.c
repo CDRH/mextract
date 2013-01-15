@@ -3,7 +3,7 @@
 *
 * Written and maintained by Stephen Ramsay <sramsay.unl@gmail.com>
 *
-* Last Modified: Mon Jan 14 14:59:52 CST 2013
+* Last Modified: Tue Jan 15 15:35:04 CST 2013
 
 * Copyright (c) 2013 Stephen Ramsay
 *
@@ -47,19 +47,22 @@ int main(int argc, char **argv)
 	int option_index = 0;
 	int switch_count = 0;
 	char *xpath_string = NULL;
+	Sasprintf(xpath_string, "//w");
+	xmlChar *content_switch = NULL;
 
-	while ((opt = getopt_long(argc, argv, "p:", long_options,
+	while ((opt = getopt_long(argc, argv, "lp:", long_options,
 				       	&option_index)) != -1) {
 		if (opt == -1)
 	       		break;
 
 		switch (opt) {
 		case 'l':
-			//xpath_builder(&xpath_string, "lem", optarg);
-			//switch_count++;
+			content_switch = (xmlChar *) "lem";
+			switch_count++;
 			break;
 		case 'p':
-			Sasprintf(xpath_string, "//w[@pos='%s']", optarg);
+			Sasprintf(xpath_string, "%s[@pos='%s']",
+				       	xpath_string, optarg);
 			break;
 		case 'V':
 			version();
@@ -72,19 +75,13 @@ int main(int argc, char **argv)
 			fputs(
 	"One of --lem, --spe, --tok, --reg permitted.",
 	stdout);
-			
 
 	}
 	
-	xmlChar *xpath;
 	xmlDocPtr doc = NULL;
 	char *file_argument = *(argv + optind);
 
-	if (optind == 1) {
-		xpath = (xmlChar *) "//w";
-	} else {
-		xpath = (xmlChar *) xpath_string;
-	}
+	xmlChar *xpath = (xmlChar *) xpath_string;
 
 	if (!file_argument) {
 		doc = get_doc("-");
@@ -94,7 +91,6 @@ int main(int argc, char **argv)
 
 	xmlXPathObjectPtr result = get_nodeset(doc, xpath);
 
-	xmlChar *word = NULL;
 	xmlChar *attrib = NULL;
 
 	if (result) {
@@ -102,9 +98,15 @@ int main(int argc, char **argv)
 		for (int i = 0; i < nodeset->nodeNr; i++) {
 			 //word = xmlNodeListGetString(doc, 
 			 //	nodeset->nodeTab[i]->xmlChildrenNode); 
-			attrib = xmlGetProp(nodeset->nodeTab[i], "tok");
+			if (content_switch) {	
+				attrib = xmlGetProp(nodeset->nodeTab[i],
+					       	content_switch);
+			} else {
+				attrib = xmlGetProp(nodeset->nodeTab[i],
+					       	(xmlChar *) "tok");
+
+			}
 			printf("%s\n", attrib);
-			//xmlFree(word);
 			xmlFree(attrib);
 		}
 		xmlXPathFreeObject(result);

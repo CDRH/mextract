@@ -3,7 +3,7 @@
 *
 * Written and maintained by Stephen Ramsay <sramsay.unl@gmail.com>
 *
-* Last Modified: Tue Jan 15 17:06:24 CST 2013
+* Last Modified: Wed Jan 16 10:19:16 CST 2013
 *
 * Copyright (c) 2013 Stephen Ramsay
 *
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 	int switch_count = 0;
 	int attr_count   = 0;
 	char *xpath_string = NULL;
-	Sasprintf(xpath_string, "//w");
+	Sasprintf(xpath_string, "//*[local-name()='w']");
 	xmlChar *content_switch = NULL;
 
 	while ((opt = getopt_long(argc, argv, "ehlp:rsV", long_options,
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 		}
 
 	}
-	
+
 	const xmlChar *xpath = NULL;
 
 	if (attr_count > 0) {
@@ -109,6 +109,7 @@ int main(int argc, char **argv)
 	} else {
 		xpath = (xmlChar *) xpath_string;
 	}
+
 
 	xmlDocPtr doc = NULL;
 	const char *file_argument = *(argv + optind);
@@ -131,7 +132,6 @@ int main(int argc, char **argv)
 			} else {
 				attrib = xmlGetProp(nodeset->nodeTab[i],
 					       	(xmlChar *) "tok");
-
 			}
 			printf("%s\n", attrib);
 			xmlFree(attrib);
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
 
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
-	debug_print("%s\n", xpath_string);
+	debug_print("%s\n", xpath);
 	free(xpath_string);
 	return (1);
 }

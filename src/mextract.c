@@ -250,5 +250,5 @@ XPath specifiers:\n\
    	printf("By default, %s will return all tokens (i.e. //w/@tok)\n\n",
 			PACKAGE);
 
-	printf("Report bugs to: %s\n", PACKAGE_BUGREPORT);
+	fputs("Report bugs at: <https://github.com/CDRH/mextract/issues>\n", stdout);
 }

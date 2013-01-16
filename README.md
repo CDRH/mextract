@@ -36,7 +36,7 @@ By default, `mextract` will return all tokens (i.e. //w/@tok).
 Compiling and Installing MorphExtractor
 ---------------------------------------
 
-MorphExtractor, you need to have [libxml2](http://xmlsoft.org/) and [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config) installed -- both of which are widely available through package managers for UNIX-like systems.
+MorphExtractor uses [libxml2](http://xmlsoft.org/) and [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config) -- both of which are widely available through package managers for UNIX-like systems.
 
 To compile and install:
 	tar -xvzf mextract.tar.gz

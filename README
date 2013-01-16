@@ -2,11 +2,9 @@
 MorphExtractor
 ==============
 
-Version 0.9.2-alpha
+Version 0.10.0-beta
 
-*This is pre-release software.*  It may fail to compile.  It might have undocumented features.  It certainly has unimplemented features.  It definitely has bugs.  You have been warned.  Watch this space for updates.
-
-Bug reports may be filed in the [Issues](https://github.com/CDRH/mextract/issues) section of the [GitHub repository](https://github.com/CDRH/mextract).
+*This is beta software,* which means that has not been extensively tested or compiled on a wide variety of platforms.  Bug reports may be filed in the [Issues](https://github.com/CDRH/mextract/issues) section of the [GitHub repository](https://github.com/CDRH/mextract).
 
 MorphExtractor is a command-line tool for extracting tokens from [MorphAdorner](http://morphadorner.northwestern.edu/) files.  It is particularly useful in the context of a UNIX pipeline.
 

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([mextract], [0.9.2-alpha], [sramsay.unl@gmail.com])
+AC_INIT([mextract], [0.10.0-beta], [sramsay.unl@gmail.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_FILES([Makefile
                  src/Makefile])

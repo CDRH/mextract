@@ -31,6 +31,9 @@
 #define debug_print(fmt, ...)					       \
 	do { if (DEBUG) fprintf(stderr, fmt, __VA_ARGS__); } while (0)
 
+/* String equality */
+#define STREQ(a, b) (*(a) == *(b) && strcmp((a), (b)) == 0)
+
 /* Safe version of asprintf.  Slightly modified from Ben Klemens
  * version */
 #define Sasprintf(write_to, ...) {				\

@@ -17,8 +17,8 @@ Downloading
 
 The latest version of MorphExtractor is available [here](http://abbot.unl.edu/downloads/)
 
-Usage:
-------
+Usage
+-----
 
 	mextract [OPTIONS]... [FILE]
 
@@ -39,6 +39,7 @@ Compiling and Installing MorphExtractor
 MorphExtractor uses [libxml2](http://xmlsoft.org/) and [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config) -- both of which are widely available through package managers for UNIX-like systems.
 
 To compile and install:
+
 	tar -xvzf mextract.tar.gz
 	cd mextract
 	./configure

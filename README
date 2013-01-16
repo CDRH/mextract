@@ -10,7 +10,7 @@ Bug reports may be filed in the [Issues](https://github.com/CDRH/mextract/issues
 
 MorphExtractor is a command-line tool for extracting tokens from [MorphAdorner](http://morphadorner.northwestern.edu/) files.  It is particularly useful in the context of a UNIX pipeline.
 
-The data that can be extracted corresponds roughly to the attributes on the `<w>` tag in an adorned file.  For details on the meaning of these attributes and how they are derived, please consult the [documentation](http://morphadorner.northwestern.edu/morphadorner/documentation/) for MorphAdorner itself.
+The data that can be extracted corresponds roughly to the attributes on the `<w>` tag in an adorned file.  For details on the meaning of these attributes and how they are derived, please consult the [documentation](http://morphadorner.northwestern.edu/morphadorner/documentation/) for MorphAdorner itself.  The documentation for the [NUPOS tag set](http://morphadorner.northwestern.edu/morphadorner/documentation/nupos/) may be particularly useful for extracting particular parts of speech.
 
 Downloading
 -----------
@@ -28,7 +28,7 @@ Usage
 		-s, --spelling       The spelling (without specialized meta-characters.
 
 	XPath specifiers:
-		-p, --pos="x"        Part of speech (where x is a [NUPOS tag](http://morphadorner.northwestern.edu/morphadorner/documentation/nupos/).
+		-p, --pos="n"        Part of speech (where n is a NUPOS tag)
 		-e, --eos            At end of sentence.
 
 	By default, `mextract` will return all tokens (i.e. //w/@tok).

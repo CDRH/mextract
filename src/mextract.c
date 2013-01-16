@@ -28,6 +28,7 @@
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 #include <stdio.h>
+#include <string.h>
 
 void xpath_builder(char **xpath_string, char *format_string, char *optarg, int
 		attr_count);
@@ -122,19 +123,29 @@ int main(int argc, char **argv)
 
 	const xmlXPathObjectPtr result = get_nodeset(doc, xpath);
 	xmlChar *attrib = NULL;
+	char *part = NULL;
+	const char *n = "N"; // unsplit token
+	const char *f = "F"; // final part of split token
 
 	if (result) {
 		xmlNodeSetPtr nodeset = result->nodesetval;
 		for (int i = 0; i < nodeset->nodeNr; i++) {
-			if (content_switch) {	
-				attrib = xmlGetProp(nodeset->nodeTab[i],
-					       	content_switch);
-			} else {
-				attrib = xmlGetProp(nodeset->nodeTab[i],
-					       	(xmlChar *) "tok");
+			part = (char *)xmlGetProp(nodeset->nodeTab[i],
+				       	(xmlChar *) "part");
+			if (STREQ(part, n) || STREQ(part, f)) {
+				if (content_switch) {	
+					attrib = xmlGetProp(
+							nodeset->nodeTab[i],
+						       	content_switch);
+				} else {
+					attrib = xmlGetProp(
+							nodeset->nodeTab[i],
+						       	(xmlChar *) "tok");
+				}
+				printf("%s\n", attrib);
+				xmlFree(attrib);
 			}
-			printf("%s\n", attrib);
-			xmlFree(attrib);
+			free(part);
 		}
 		xmlXPathFreeObject(result);
 	}

@@ -25,7 +25,7 @@
 * <http://www.gnu.org/licenses/>.
 */
 
-#define DEBUG 1
+#define DEBUG 0
 
 /* Enable debugging string */
 #define debug_print(fmt, ...)					       \

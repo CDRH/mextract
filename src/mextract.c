@@ -31,8 +31,8 @@
 
 void xpath_builder(char **xpath_string, char *format_string, char *optarg, int
 		attr_count);
-xmlDocPtr get_doc(char *docname);
-xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar * xpath);
+xmlDocPtr get_doc(const char *docname);
+xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, const xmlChar *xpath);
 void version(void);
 void help(void);
 
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 
 	}
 	
-	xmlChar *xpath = NULL;
+	const xmlChar *xpath = NULL;
 
 	if (attr_count > 0) {
 		Sasprintf(xpath_string, "%s%s", xpath_string, "]");
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 	}
 
 	xmlDocPtr doc = NULL;
-	char *file_argument = *(argv + optind);
+	const char *file_argument = *(argv + optind);
 
 	if (!file_argument) {
 		doc = get_doc("-");
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 	       	doc = get_doc(file_argument);
 	}
 
-	xmlXPathObjectPtr result = get_nodeset(doc, xpath);
+	const xmlXPathObjectPtr result = get_nodeset(doc, xpath);
 	xmlChar *attrib = NULL;
 
 	if (result) {
@@ -164,7 +164,7 @@ void xpath_builder(char **xpath_string, char *cl_switch, char *optarg,
 }
 
 
-xmlDocPtr get_doc(char *docname)
+xmlDocPtr get_doc(const char *docname)
 {
 	xmlDocPtr doc = xmlParseFile(docname);
 
@@ -177,7 +177,7 @@ xmlDocPtr get_doc(char *docname)
 }
 
 
-xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar * xpath)
+xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, const xmlChar *xpath)
 {
 	xmlXPathContextPtr context = xmlXPathNewContext(doc);
 
@@ -220,6 +220,9 @@ There is NO WARRANTY, to the extent permitted by law.\n\
 ", stdout);
 }
 
+/*
+ * Help info for the --help switch
+ */
 void help(void)
 {
 	printf("Usage: %s [OPTIONS]... [FILE]\n", PACKAGE);

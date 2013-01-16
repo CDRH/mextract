@@ -20,18 +20,18 @@ The latest version of MorphExtractor is available [here](http://abbot.unl.edu/do
 Usage:
 ------
 
-mextract [OPTIONS]... [FILE]
+	mextract [OPTIONS]... [FILE]
 
-Content Options (one of):
-   -l, --lemma          The lemma head word form(s) of the token.
-   -r, --regular        A standardized version of the spelling.
-   -s, --spelling       The spelling (without specialized meta-characters.
+	Content Options (one of):
+		-l, --lemma          The lemma head word form(s) of the token.
+		-r, --regular        A standardized version of the spelling.
+		-s, --spelling       The spelling (without specialized meta-characters.
 
-XPath specifiers:
-   -p, --pos            Part of speech (NUPOS).
-   -e, --eos            At end of sentence.
+	XPath specifiers:
+		-p, --pos            Part of speech (NUPOS).
+		-e, --eos            At end of sentence.
 
-By default, `mextract` will return all tokens (i.e. //w/@tok).
+	By default, `mextract` will return all tokens (i.e. //w/@tok).
 
 Compiling and Installing MorphExtractor
 ---------------------------------------

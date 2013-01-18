@@ -3,9 +3,9 @@
 *
 * Written and maintained by Stephen Ramsay <sramsay.unl@gmail.com>
 *
-* Last Modified: Wed Jan 16 10:19:16 CST 2013
+* Last Modified: Fri Jan 18 13:32:14 CST 2013
 *
-* Copyright (c) 2013 Stephen Ramsay
+* Copyright © 2013 Stephen Ramsay.
 *
 * MorphExtractor is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -32,8 +32,8 @@
 
 void xpath_builder(char **xpath_string, char *format_string, char *optarg, int
 		attr_count);
-xmlDocPtr get_doc(const char *docname);
-xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, const xmlChar *xpath);
+xmlDocPtr get_doc(char const *docname);
+xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar const *xpath);
 void version(void);
 void help(void);
 
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 
 	}
 
-	const xmlChar *xpath = NULL;
+	xmlChar const *xpath = NULL;
 
 	if (attr_count > 0) {
 		Sasprintf(xpath_string, "%s%s", xpath_string, "]");
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 
 
 	xmlDocPtr doc = NULL;
-	const char *file_argument = *(argv + optind);
+	char const *file_argument = *(argv + optind);
 
 	if (!file_argument) {
 		doc = get_doc("-");
@@ -121,11 +121,11 @@ int main(int argc, char **argv)
 	       	doc = get_doc(file_argument);
 	}
 
-	const xmlXPathObjectPtr result = get_nodeset(doc, xpath);
+	xmlXPathObjectPtr const result = get_nodeset(doc, xpath);
 	xmlChar *attrib = NULL;
 	char *part = NULL;
-	const char *n = "N"; // unsplit token
-	const char *f = "F"; // final part of split token
+	char const *n = "N"; // unsplit token
+	char const *f = "F"; // final part of split token
 
 	if (result) {
 		xmlNodeSetPtr nodeset = result->nodesetval;
@@ -175,7 +175,7 @@ void xpath_builder(char **xpath_string, char *cl_switch, char *optarg,
 }
 
 
-xmlDocPtr get_doc(const char *docname)
+xmlDocPtr get_doc(char const *docname)
 {
 	xmlDocPtr doc = xmlParseFile(docname);
 
@@ -188,7 +188,7 @@ xmlDocPtr get_doc(const char *docname)
 }
 
 
-xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, const xmlChar *xpath)
+xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar const *xpath)
 {
 	xmlXPathContextPtr context = xmlXPathNewContext(doc);
 

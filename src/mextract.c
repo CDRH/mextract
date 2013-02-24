@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 	int opt = 0;
 	int option_index = 0;
 	int switch_count = 0;
-	int attr_count   = 0;
+	int attr_count = 0;
 	char *xpath_string = NULL;
 	Sasprintf(xpath_string, "//*[local-name()='w']");
 	xmlChar *content_switch = NULL;
@@ -241,7 +241,7 @@ void help(void)
 Content Options (one of):\n\
    -l, --lemma		The lemma head word form(s) of the token.\n\
    -r, --regular	A standardized version of the spelling.\n\
-   -s, --spelling	The spelling (without specialized meta-characters.\n\n\
+   -s, --spelling	The spelling (without specialized meta-characters).\n\n\
 XPath specifiers:\n\
    -p, --pos		Part of speech (NUPOS).\n\
    -e, --eos		At end of sentence.\n\n\

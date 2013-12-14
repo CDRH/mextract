@@ -11,3 +11,7 @@ Makefile.in
 /depcomp
 /install-sh
 /missing
+/autoscan-2.69.log
+/config.h.in~
+/configure.scan
+

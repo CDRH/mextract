@@ -2,7 +2,7 @@
 MorphExtractor
 ==============
 
-Version 0.10.0-beta
+Version 0.10.1-beta
 
 *This is beta software,* which means that it has not been extensively tested or compiled on a wide variety of platforms.  Bug reports may be filed in the [Issues](https://github.com/CDRH/mextract/issues) section of the [GitHub repository](https://github.com/CDRH/mextract).
 
@@ -40,6 +40,7 @@ To compile and install:
 
 	tar -xvzf mextract.tar.gz
 	cd mextract
+	autogen.sh
 	./configure
 	make
 	make install

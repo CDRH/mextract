@@ -59,9 +59,9 @@ int main(int argc, char **argv)
 	xmlChar *content_switch = NULL;
 
 	while ((opt = getopt_long(argc, argv, "ehlp:rsV", long_options,
-				       	&option_index)) != -1) {
+					&option_index)) != -1) {
 		if (opt == -1)
-	       		break;
+		break;
 		switch (opt) {
 		case 'e':
 			xpath_builder(&xpath_string, "eos", "1", attr_count);
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
 	if (!file_argument) {
 		doc = get_doc("-");
 	} else {
-	       	doc = get_doc(file_argument);
+		doc = get_doc(file_argument);
 	}
 
 	xmlXPathObjectPtr const result = get_nodeset(doc, xpath);
@@ -154,7 +154,7 @@ int main(int argc, char **argv)
 	xmlCleanupParser();
 	debug_print("%s\n", xpath);
 	free(xpath_string);
-	return (1);
+	exit(0);
 }
 
 /*
@@ -252,3 +252,4 @@ XPath specifiers:\n\
 
 	fputs("Report bugs at: <https://github.com/CDRH/mextract/issues>\n", stdout);
 }
+

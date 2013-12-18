@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 
 
 	xmlDocPtr doc = NULL;
-	char const *file_argument = *(argv + optind);
+	char const *file_argument = *(argv + option_index);
 
 	if (!file_argument) {
 		doc = get_doc("-");
@@ -154,7 +154,6 @@ int main(int argc, char **argv)
 	xmlCleanupParser();
 	debug_print("%s\n", xpath);
 	free(xpath_string);
-	exit(0);
 }
 
 /*
@@ -221,7 +220,7 @@ xmlXPathObjectPtr get_nodeset(xmlDocPtr doc, xmlChar const *xpath)
 void version(void)
 {
 	printf("%s\n", PACKAGE_STRING);
-	fputs("Copyright © 2013 by Stephen Ramsay", stdout);
+	fputs("Copyright © 2013-2014 by Stephen Ramsay", stdout);
 	fputs("\
 \n\
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\n\
